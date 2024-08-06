@@ -1,3 +1,8 @@
+#Opt out of Powershell telemetry
+if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) {
+    [System.Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', 'true', [System.EnvironmentVariableTarget]::Machine)
+}
+
 # Clear the console
 Clear
 
@@ -125,6 +130,9 @@ function Root {
 
 # Update function
 function Update {
+    #Update Powershell
+    winget upgrade "Microsoft.PowerShell" --accept-source-agreements --accept-package-agreements
+
     # Upgrade pip
     python -m pip install --upgrade pip
 
