@@ -85,7 +85,7 @@ function FE {
 
 # Change directories
 function Home {
-    cd ~
+    Set-Location -Path "$HOME"
 }
 
 function Root {
@@ -107,7 +107,6 @@ function Show-Help {
 PowerShell Profile Help
 =======================
 
-Edit-Profile - Opens the current user's profile for editing using the configured editor.
 Get-PubIP - Retrieves the public IP address of the machine.
 Docs - Changes the current directory to the user's Documents folder.
 Dtop - Changes the current directory to the user's Desktop folder.
