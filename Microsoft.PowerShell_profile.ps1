@@ -2,7 +2,7 @@
 Clear
 
 # Function to identify the terminal
-function Get-TerminalType {
+function TerminalType {
     if ($env:TERM_PROGRAM -eq "vscode") {
         return "Visual Studio Code Terminal"
     }
@@ -27,7 +27,7 @@ function Get-TerminalType {
 }
 
 # Get terminal type and print it
-$terminalType = Get-TerminalType
+$terminalType = TerminalType
 Write-Host "$terminalType" -ForegroundColor Blue
 
 # Initialize Oh My Posh config
@@ -54,7 +54,7 @@ function Dtop {
 
 # Move to the Downloads directory
 function DLoads {
-    Set-Location -Path "$HOME\onedrive\Downloads"
+    Set-Location -Path "$HOME\Downloads"
 }
 
 # List all files
@@ -99,6 +99,13 @@ function GetPrivIP {
 
     # Format the output
     $ipAddresses | Format-Table -Property InterfaceAlias, IPAddress, AddressFamily -AutoSize
+}
+
+function Speedtest {    
+    Write-Host "Running Speedtest" -ForegroundColor Red
+    irm asheroto.com/speedtest | iex
+    Write-Host "Pinging 1.1.1.1" -ForegroundColor Red
+    ping 1.1.1.1
 }
 
 # Open current directory in File Explorer
@@ -160,6 +167,10 @@ function SystemScan {
     } catch {
         Write-Host "SFC scan failed: $_" -ForegroundColor Red
     }
+
+    Write-Host "Restoring original file permissions" -ForegroundColor Cyan
+    icacls "C:\" /reset /t /c /l
+    Write-Host "Restoring permissions completed successfully." -ForegroundColor Green
 }
 
 # Generate a random secure password
@@ -214,13 +225,14 @@ File and System Information:
 - SysInfo: Displays detailed system information.
 - GetPrivIP: Retrieves the private IP address of the machine.
 - GetPubIP: Retrieves the public IP address of the machine.
+- SpeedTest: Runs a speedtest for you internet.
 
-System Maintenance
+System Maintenance:
 - FlushDNS: Clears the DNS cache.
 - SystemScan: Runs a DISM and SFC scan.
 - Update: Updates all known apps.
 
-Utility Functions
+Utility Functions:
 - FE: Opens File Explorer in your current directory.
 - Winutil: Opens the Chris Titus Tech Windows utility.
 - RPassword: Generates a random secure password.
