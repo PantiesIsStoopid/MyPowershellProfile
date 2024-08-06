@@ -1,13 +1,3 @@
-# Upgrade pip
-python -m pip install --upgrade pip
-
-# Clear the console
-Clear
-
-# Update Oh My Posh and Nilesoft Shell
-winget upgrade JanDeDobbeleer.OhMyPosh -s winget
-winget upgrade nilesoft.shell
-
 # Clear the console
 Clear
 
@@ -38,7 +28,7 @@ function Get-TerminalType {
 
 # Get terminal type and print it
 $terminalType = Get-TerminalType
-Write-Output "$terminalType"
+Write-Host "$terminalType" -ForegroundColor Blue
 
 # Initialize Oh My Posh config
 if ($PSCmdlet.MyInvocation.PSCommandPath -notmatch 'oh-my-posh') {
@@ -52,36 +42,64 @@ if ($terminalType -ne "Visual Studio Code Terminal") {
 
 # Aliases
 
-#Flush DNS Server
+# Flush DNS Server
 function FlushDNS {
     Clear-DnsClientCache
-    Write-Host "DNS has been flushed"
+    Write-Host "DNS has been flushed" -ForegroundColor Magenta
 }
 
-#Print Detailed System Infomation
-function SysInfo { Get-ComputerInfo }
+# Print Detailed System Information
+function SysInfo {
+    Get-ComputerInfo
+}
 
-#List all files 
-function LA { Get-ChildItem -Path . -Force | Format-Table -AutoSize }
+# List all files
+function LA {
+    Get-ChildItem -Path . -Force | Format-Table -AutoSize
+}
 
-#Lists all files including hidden
-function LL { Get-ChildItem -Path . -Force -Hidden | Format-Table -AutoSize }
+# List all files including hidden
+function LL {
+    Get-ChildItem -Path . -Force -Hidden | Format-Table -AutoSize
+}
 
-#Set directory to desktop
-function Docs { Set-Location -Path $HOME\Documents }
+# Set directory to Documents
+function Docs {
+    Set-Location -Path "$HOME\onedrive\Documents"
+}
 
-##Set directory to documents
-function Dtop { Set-Location -Path $HOME\Desktop }
+# Set directory to Desktop
+function Dtop {
+    Set-Location -Path "$HOME\onedrive\Desktop"
+}
 
-#Print the IP of the PC
-function Get-PubIP { (Invoke-WebRequest http://ifconfig.me/ip).Content }
+# Print the IP of the PC
+function Get-PubIP {
+    (Invoke-WebRequest http://ifconfig.me/ip).Content
+}
 
-#Open current directory in file explorer
-function FE { ii (Get-Location) }
+# Open current directory in File Explorer
+function FE {
+    ii (Get-Location)
+}
 
-#Change directorys
-function Home {cd ~}
-function Root {cd c:\}
+# Change directories
+function Home {
+    cd ~
+}
+
+function Root {
+    cd c:\
+}
+
+# Update function
+function Update {
+    # Upgrade pip
+    python -m pip install --upgrade pip
+
+    # Update all known apps
+    winget upgrade --all
+}
 
 # Help Function
 function Show-Help {
@@ -97,9 +115,11 @@ LA - Lists all files in the current directory with detailed formatting.
 LL - Lists all files, including hidden, in the current directory with detailed formatting.
 SysInfo - Displays detailed system information.
 FlushDNS - Clears the DNS cache.
-FE - opens file explorer in you current directory.
+FE - Opens File Explorer in your current directory.
 Home - Change directories to user.
 Root - Change directories to C drive.
+Update - Updates all known apps.
+
 Use 'Show-Help' to display this help message.
 
 "@
