@@ -17,6 +17,11 @@ To use this PowerShell profile script effectively, you need to have the followin
     winget install neofetch
     ```
 
+4. **Oh My Posh**: A prompt theme engine for PowerShell that enhances the appearance of your prompt. Install it via `winget` using:
+    ```powershell
+    winget install JanDeDobbeleer.OhMyPosh
+    ```
+
 ## Installation
 
 1. **Python**: Download and install Python from [python.org](https://www.python.org/downloads/).
@@ -26,6 +31,11 @@ To use this PowerShell profile script effectively, you need to have the followin
 3. **neofetch**: Install `neofetch` using:
     ```powershell
     winget install neofetch
+    ```
+
+4. **Oh My Posh**: Install Oh My Posh using:
+    ```powershell
+    winget install JanDeDobbeleer.OhMyPosh
     ```
 
 ## Usage
