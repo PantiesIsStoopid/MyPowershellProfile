@@ -53,54 +53,54 @@ if ($terminalType -ne "Visual Studio Code Terminal") {
 # Aliases
 
 #Flush DNS Server
-function flushdns {
+function FlushDNS {
     Clear-DnsClientCache
     Write-Host "DNS has been flushed"
 }
 
 #Print Detailed System Infomation
-function sysinfo { Get-ComputerInfo }
+function SysInfo { Get-ComputerInfo }
 
 #List all files 
-function la { Get-ChildItem -Path . -Force | Format-Table -AutoSize }
+function LA { Get-ChildItem -Path . -Force | Format-Table -AutoSize }
 
 #Lists all files including hidden
-function ll { Get-ChildItem -Path . -Force -Hidden | Format-Table -AutoSize }
+function LL { Get-ChildItem -Path . -Force -Hidden | Format-Table -AutoSize }
 
 #Set directory to desktop
-function docs { Set-Location -Path $HOME\Documents }
+function Docs { Set-Location -Path $HOME\Documents }
 
 ##Set directory to documents
-function dtop { Set-Location -Path $HOME\Desktop }
+function Dtop { Set-Location -Path $HOME\Desktop }
 
 #Print the IP of the PC
 function Get-PubIP { (Invoke-WebRequest http://ifconfig.me/ip).Content }
 
 #Open current directory in file explorer
-function fe { ii (Get-Location) }
+function FE { ii (Get-Location) }
 
+#Change directorys
+function Home {cd ~}
+function Root {cd c:\}
+
+# Help Function
 function Show-Help {
     @"
 PowerShell Profile Help
 =======================
 
 Edit-Profile - Opens the current user's profile for editing using the configured editor.
-
 Get-PubIP - Retrieves the public IP address of the machine.
-
-docs - Changes the current directory to the user's Documents folder.
-
-dtop - Changes the current directory to the user's Desktop folder.
-
-la - Lists all files in the current directory with detailed formatting.
-
-ll - Lists all files, including hidden, in the current directory with detailed formatting.
-
-sysinfo - Displays detailed system information.
-
-flushdns - Clears the DNS cache.
-
-fe - opens file explorer in you current directory.
-
+Docs - Changes the current directory to the user's Documents folder.
+Dtop - Changes the current directory to the user's Desktop folder.
+LA - Lists all files in the current directory with detailed formatting.
+LL - Lists all files, including hidden, in the current directory with detailed formatting.
+SysInfo - Displays detailed system information.
+FlushDNS - Clears the DNS cache.
+FE - opens file explorer in you current directory.
+Home - Change directories to user.
+Root - Change directories to C drive.
 Use 'Show-Help' to display this help message.
+
 "@
+}
