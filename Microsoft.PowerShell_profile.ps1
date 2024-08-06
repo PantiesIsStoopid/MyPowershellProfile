@@ -104,4 +104,3 @@ fe - opens file explorer in you current directory.
 
 Use 'Show-Help' to display this help message.
 "@
-}
