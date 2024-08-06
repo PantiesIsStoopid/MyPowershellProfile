@@ -101,6 +101,15 @@ function Update {
     winget upgrade --all
 }
 
+#Open the Chris Titus Tech windows utility
+function WinUtil {
+    iwr -useb https://christitus.com/win | iex
+}
+
+#Reload Terminal profile
+function Reload-Profile {
+    & $profile
+}
 # Help Function
 function Show-Help {
     @"
@@ -118,6 +127,8 @@ FE - Opens File Explorer in your current directory.
 Home - Change directories to user.
 Root - Change directories to C drive.
 Update - Updates all known apps.
+Winutil - Opens the Chris Titus Tech windows utility.
+Reload-Profile - Realoads the terminal profile.
 
 Use 'Show-Help' to display this help message.
 
