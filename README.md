@@ -22,6 +22,11 @@ To use this PowerShell profile script effectively, you need to have the followin
     winget install JanDeDobbeleer.OhMyPosh
     ```
 
+5. **Nerd Fonts**: A collection of patched fonts for developers, which are recommended for full compatibility with Oh My Posh themes. Install a Nerd Font of your choice from the [Nerd Fonts GitHub Releases](https://github.com/ryanoasis/nerd-fonts/releases). You can download and install the font manually, or use the following command to install a Nerd Font via `winget`:
+    ```powershell
+    winget install --id=Microsoft.WindowsTerminal --source=winget
+    ```
+
 ## Installation
 
 1. **Python**: Download and install Python from [python.org](https://www.python.org/downloads/).
@@ -37,6 +42,8 @@ To use this PowerShell profile script effectively, you need to have the followin
     ```powershell
     winget install JanDeDobbeleer.OhMyPosh
     ```
+
+5. **Nerd Fonts**: Download and install a Nerd Font from the [Nerd Fonts GitHub Releases](https://github.com/ryanoasis/nerd-fonts/releases). After downloading, install the font and configure your terminal to use it.
 
 ## Usage
 
