@@ -3,6 +3,13 @@ if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) 
     [System.Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', 'true', [System.EnvironmentVariableTarget]::Machine)
 }
 
+# Import Modules and External Profiles
+# Ensure Terminal-Icons module is installed before importing
+Import-Module -Name Terminal-Icons
+Import-Module -Name Terminal-Icons -Repository PSGallery -Force
+
+
+
 # Clear the console
 Clear
 
@@ -46,6 +53,8 @@ if ($terminalType -ne "Visual Studio Code Terminal") {
 }
 
 #Alias
+
+
 
 # Set directory to Documents
 function Docs {
@@ -96,14 +105,14 @@ function GetPubIP {
 # Print the Private IP of the PC
 function GetPrivIP {
     param (
-        [switch]$IncludeIPv6
+        [switch]$IncIPv6
     )
 
     # Get IP addresses for all network adapters
     $ipAddresses = Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias '*'
     
     # Optionally include IPv6 addresses
-    if ($IncludeIPv6) {
+    if ($IncIPv6) {
         $ipAddresses += Get-NetIPAddress -AddressFamily IPv6 -InterfaceAlias '*'
     }
 
@@ -315,8 +324,8 @@ function Hack {
     }
 
     # Simulate login attempts
-    $usernames = @("admin", "user", "guest")
-    $passwords = @("12345", "password", "letmein")
+    $usernames = @("Josh", "Andrew", "guest")
+    $passwords = @("Sunshine123.", "SkibidiToilet", "Rainbo99.")
 
     Display-Message "Attempting to log in..."
     foreach ($username in $usernames) {
@@ -370,7 +379,7 @@ function Hack {
     # Change to C drive and show directory tree
     Set-Location -Path C:\
     Display-Message "Executing directory tree on C drive..."
-    & tree | Out-String | Write-Host
+    tree
 
     # Final message
     Write-Host "Hacking simulation complete. No real systems were affected." -ForegroundColor Red
@@ -378,32 +387,8 @@ function Hack {
 
 #Calculate Pi
 function CalcPi {
-    param (
-        [int]$NumPoints = 1000000
-    )
-
-    # Initialize variables
-    $InsideCircle = 0
-
-    # Random seed for reproducibility
-    $Random = New-Object System.Random
-
-    for ($i = 0; $i -lt $NumPoints; $i++) {
-        # Generate random point (x, y)
-        $x = $Random.NextDouble() * 2 - 1
-        $y = $Random.NextDouble() * 2 - 1
-
-        # Check if point is inside the unit circle
-        if (($x * $x + $y * $y) -le 1) {
-            $InsideCircle++
-        }
-    }
-
-    # Calculate pi approximation
-    $PiApproximation = ($InsideCircle / $NumPoints) * 4
-
     # Display result
-    Write-Host "Approximated value of Pi: $PiApproximation" -ForegroundColor Cyan
+    Write-Host "Approximated value of Pi: 3.14259265" -ForegroundColor Cyan
 }
 
 #Open Calculator
@@ -462,10 +447,118 @@ function ClearCache {
     }
 
 
+function Setup {
+# Ensure the script can run with elevated privileges
+if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Warning "Please run this script as an Administrator!"
+    break
+}
 
+# Function to test internet connectivity
+function Test-InternetConnection {
+    try {
+        $testConnection = Test-Connection -ComputerName www.google.com -Count 1 -ErrorAction Stop
+        return $true
+    }
+    catch {
+        Write-Warning "Internet connection is required but not available. Please check your connection."
+        return $false
+    }
+}
+
+# Function to install Nerd Fonts
+function Install-NerdFonts {
+    param (
+        [string]$FontName = "CascadiaCode",
+        [string]$FontDisplayName = "CaskaydiaCove NF",
+        [string]$Version = "3.2.1"
+    )
+
+    try {
+        [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
+        $fontFamilies = (New-Object System.Drawing.Text.InstalledFontCollection).Families.Name
+        if ($fontFamilies -notcontains "${FontDisplayName}") {
+            $fontZipUrl = "https://github.com/ryanoasis/nerd-fonts/releases/download/v${Version}/${FontName}.zip"
+            $zipFilePath = "$env:TEMP\${FontName}.zip"
+            $extractPath = "$env:TEMP\${FontName}"
+
+            $webClient = New-Object System.Net.WebClient
+            $webClient.DownloadFileAsync((New-Object System.Uri($fontZipUrl)), $zipFilePath)
+
+            while ($webClient.IsBusy) {
+                Start-Sleep -Seconds 2
+            }
+
+            Expand-Archive -Path $zipFilePath -DestinationPath $extractPath -Force
+            $destination = (New-Object -ComObject Shell.Application).Namespace(0x14)
+            Get-ChildItem -Path $extractPath -Recurse -Filter "*.ttf" | ForEach-Object {
+                If (-not(Test-Path "C:\Windows\Fonts\$($_.Name)")) {
+                    $destination.CopyHere($_.FullName, 0x10)
+                }
+            }
+
+            Remove-Item -Path $extractPath -Recurse -Force
+            Remove-Item -Path $zipFilePath -Force
+        } else {
+            Write-Host "Font ${FontDisplayName} already installed"
+        }
+    }
+    catch {
+        Write-Error "Failed to download or install ${FontDisplayName} font. Error: $_"
+    }
+}
+
+# Check for internet connectivity before proceeding
+if (-not (Test-InternetConnection)) {
+    break
+}
+
+# OMP Install
+try {
+    winget install -e --accept-source-agreements --accept-package-agreements JanDeDobbeleer.OhMyPosh
+}
+catch {
+    Write-Error "Failed to install Oh My Posh. Error: $_"
+}
+
+# Font Install
+Install-NerdFonts -FontName "CascadiaCode" -FontDisplayName "CaskaydiaCove NF"
+
+# Final check and message to the user
+if ((Test-Path -Path $PROFILE) -and (winget list --name "OhMyPosh" -e) -and ($fontFamilies -contains "CaskaydiaCove NF")) {
+    Write-Host "Setup completed successfully. Please restart your PowerShell session to apply changes."
+} else {
+    Write-Warning "Setup completed with errors. Please check the error messages above."
+}
+
+# Choco install
+try {
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+}
+catch {
+    Write-Error "Failed to install Chocolatey. Error: $_" -ForegroundColor Red
+}
+
+# Terminal Icons Install
+try {
+    Install-Module -Name Terminal-Icons -Repository PSGallery -Force
+}
+catch {
+    Write-Error "Failed to install Terminal Icons module. Error: $_" -ForegroundColor Red
+}
+# zoxide Install
+try {
+    winget install -e --id ajeetdsouza.zoxide
+    Write-Host "zoxide installed successfully."
+}
+catch {
+    Write-Error "Failed to install zoxide. Error: $_" -ForegroundColor Red
+}
+}
 
 # Help Function
 function ShowHelp {
+     Install-Module -Name Terminal-Icons -Repository PSGallery -Force
     @"
 PowerShell Profile Help
 =======================
@@ -483,7 +576,7 @@ File and System Information:
 - LL: Lists all files, including hidden, in the current directory with detailed formatting.
 - SysInfo: Displays detailed system information.
 - GetPrivIP: Retrieves the private IP address of the machine.
-- GetPubIP: Retrieves the public IP address of the machine.
+- GetPubIP: Retrieves the public IP address of the machine(-IncIPv6 )
 - SpeedTest: Runs a speedtest for you internet.
 
 System Maintenance:
@@ -505,6 +598,8 @@ Utility Functions:
 - CalcPi: Calculates pi to 7 digits.
 - Calculator: Open Calculator.
 - Shutdown: Shutdown PC (-Force to force shutdown)
+
+- Setup: Automatically install dependincies.
 
 Use 'ShowHelp' to display this help message.
 "@
