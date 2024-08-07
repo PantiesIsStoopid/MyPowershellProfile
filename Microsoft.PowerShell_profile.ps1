@@ -680,7 +680,7 @@ Directory Navigation:
 - Docs: Changes the current directory to the user's Documents folder.
 - Dtop: Changes the current directory to the user's Desktop folder.
 - DLoads: Changes the current directory to the user's Downloads folder.
-- CodeDIR: Changes the current directory to the user's Code folder.and opens it in VS Code.
+- CodeDIR: Changes the current directory to the user's Code folder and opens it in VS Code.
 - Home: Changes directories to the user's home.
 - Root: Changes directories to the C: drive.
 
@@ -703,13 +703,12 @@ Utility Functions:
 - FE: Opens File Explorer in your current directory.
 - Winutil: Opens the Chris Titus Tech Windows utility.
 - RPassword: Generates a random secure password (-Length x .Change X to change length).
-- SystemTime: Updates the system time.
 - ReloadProfile: Reloads the terminal profile.
 - ClearRAM: Cleans up the standby memory in RAM.
 - ReinstallWinget: Uninstalls Winget and reinstalls it.
 - Hack: Runs a fake hacking app.
-- CalcPi: Calculates pi to 7 digits.
-- Calculator: Open Calculator.
+- CalcPi: Calculates pi to 9 digits.
+- Calc: Open Calculator.
 - Shutdown: Shutdown PC (-Force to force shutdown)
 - RShutdown: Attempt shutdown on all vunerable computer on network.
 - RandomFact: Prints a random fun fact.
