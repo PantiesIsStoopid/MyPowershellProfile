@@ -237,42 +237,33 @@ function RPassword {
 
 #* Function to clear system memory (not specifically standby RAM)
 function ClearRAM {
-  # Get total and available physical memory
-  $memoryInfo = Get-CimInstance -ClassName Win32_OperatingSystem
+  # Define URL and paths
+  $url = "https://download.sysinternals.com/files/RAMMap.zip"
+  $zipPath = "C:\RAMMap.zip"
+  $extractPath = "C:\RAMMap"
 
-  # Calculate used memory
-  $totalMemory = $memoryInfo.TotalVisibleMemorySize
-  $usedMemory = $totalMemory - $freeMemory
+  # Download RAMMap
+  Invoke-WebRequest -Uri $url -OutFile $zipPath
 
-  # Convert from kilobytes to gigabytes for display
-  $usedMemoryGB = [math]::Round($usedMemory / 1MB, 2)
+  # Create extraction directory
+  if (-Not (Test-Path $extractPath)) {
+    New-Item -Path $extractPath -ItemType Directory | Out-Null
+  }
 
-  # Print RAM usage
-  Write-Host "Used RAM: $usedMemoryGB GB" -ForegroundColor DarkBlue
+  # Extract the ZIP file
+  Expand-Archive -Path $zipPath -DestinationPath $extractPath -Force
 
-  Write-Host "Clearing system memory..." -ForegroundColor Cyan
+  # Define the path to the executable
+  $exePath = "C:\RAMMap\RAMMap.exe"
 
-  # Release unused memory
-  [GC]::Collect() # Force garbage collection
-  [GC]::WaitForPendingFinalizers() # Wait for finalizers to run
+  # Run the executable and wait until it is closed
+  Write-Host "Please open the app click 'Empty' then 'Empty Standby List' Then close the app."
+  Start-Process -FilePath $exePath -Wait
 
-  # Use the Windows API to flush the system memory
-  $null = [System.Diagnostics.Process]::GetCurrentProcess().MinWorkingSet = [System.Diagnostics.Process]::GetCurrentProcess().MaxWorkingSet
-
-  # Get total and available physical memory
-  $memoryInfo = Get-CimInstance -ClassName Win32_OperatingSystem
-
-  # Calculate used memory
-  $totalMemory = $memoryInfo.TotalVisibleMemorySize
-  $usedMemory = $totalMemory - $freeMemory
-
-  # Convert from kilobytes to gigabytes for display
-  $usedMemoryGB = [math]::Round($usedMemory / 1MB, 2)
-
-  # Print RAM usage
-  Write-Host "Used RAM: $usedMemoryGB GB" -ForegroundColor DarkBlue
-
-  Write-Host "Memory cleanup completed." -ForegroundColor Green
+  # Optionally, clean up by deleting RAMMap files
+  Remove-Item -Path $zipPath -Force
+  Remove-Item -Path $extractPath -Recurse -Force
+  
 }
 
 #*Reinstall winget
@@ -646,7 +637,7 @@ function Get-NetworkComputers {
 }
 
 # Function to shut down a computer without warning
-function Shut-DownComputer {
+function ShutDownComputer {
   param (
     [string]$ComputerName
   )
@@ -665,14 +656,14 @@ if ($computers.Count -eq 0) {
   if ($computers.Count -gt 0) {
     $targetComputer = $computers[0]
     Write-Output "Shutting down $targetComputer..."
-    Shut-DownComputer -ComputerName $targetComputer
+    ShutDownComputer -ComputerName $targetComputer
   }
 }
 
 }
 #* Help Function
 function ShowHelp {
-  @"
+@"
 PowerShell Profile Help
 =======================
 
