@@ -440,7 +440,9 @@ for ($i = 0; $i -lt 10; $i++) {
 #* Calculate Pi
 function CalcPi {
   # Display result
-  Write-Host "Approximated value of Pi: 3.14259265" -ForegroundColor Green
+  $Pi = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665223576580719180188"
+  Set-Clipboard -Value $Pi
+
 }
 
 #*Open Calculator
@@ -728,13 +730,14 @@ Utility Functions:
 - ClearRAM: Cleans up the standby memory in RAM.
 - ReinstallWinget: Uninstalls Winget and reinstalls it.
 - Hack: Runs a fake hacking app.
-- CalcPi: Calculates pi to 9 digits.
+- CalcPi: Calculates pi to 100 digits.
 - Calc: Open Calculator.
 - Shutdown: Shutdown PC (-Force to force shutdown)
 - RShutdown: Attempt shutdown on all vunerable computer on network.
 - RandomFact: Prints a random fun fact.
 
 - Setup: Automatically install requirments.
+- CheatSheet: Displays a list of all the most common commands.
 
 Use 'ShowHelp' to display this help message.
 "@
