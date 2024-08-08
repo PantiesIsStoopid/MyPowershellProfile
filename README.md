@@ -30,10 +30,3 @@ This PowerShell script provides a variety of utilities and functions to enhance 
   - Install Nerd Fonts.
   - Set up Oh My Posh and other dependencies.
 
-## Installation
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/yourusername/yourrepository.git
-   cd yourrepository
