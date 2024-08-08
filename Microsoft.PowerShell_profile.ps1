@@ -3,6 +3,7 @@ if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) 
   [System.Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', 'true', [System.EnvironmentVariableTarget]::Machine)
 }
 
+
 # Import Modules and External Profiles
 #* Ensure Terminal-Icons module is installed before importing
 if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
@@ -44,7 +45,7 @@ function TerminalType {
 
 # Get terminal type and print it
 $terminalType = TerminalType
-Write-Host "$terminalType" -ForegroundColor Blue
+Write-Host "$terminalType" -ForegroundColor Yellow
 
 #* Initialize Oh My Posh config
 if ($PSCmdlet.MyInvocation.PSCommandPath -notmatch 'oh-my-posh') {
@@ -260,7 +261,7 @@ function ClearRAM {
   Write-Host "Please open the app click 'Empty' then 'Empty Standby List' Then close the app."
   Start-Process -FilePath $exePath -Wait
 
-  # Optionally, clean up by deleting RAMMap files
+  # Clean up by deleting RAMMap files
   Remove-Item -Path $zipPath -Force
   Remove-Item -Path $extractPath -Recurse -Force
   
@@ -462,15 +463,12 @@ function Shutdown {
   }
 }
 
-
 #* RandomFact
 function RandomFact {
   $url = "https://uselessfacts.jsph.pl/random.json?language=en"
   $response = Invoke-RestMethod -Uri $url
   Write-Host "Did you know? $($response.text)" 
 }
-
-
 
 #*Clear Caches
 function ClearCache {
@@ -584,7 +582,7 @@ Install-NerdFonts -FontName "CascadiaCode" -FontDisplayName "CaskaydiaCove NF"
 if ((Test-Path -Path $PROFILE) -and (winget list --name "OhMyPosh" -e) -and ($fontFamilies -contains "CaskaydiaCove NF")) {
   Write-Host "Setup completed successfully. Please restart your PowerShell session to apply changes." -ForegroundColor Green
 } else {
-  Write-Error "Setup completed with errors. Please check the error messages above." -ForegroundColor Red
+  Write-Error "Setup completed with errors. Please check the error messages above."
 }
 
 # Choco install
@@ -603,7 +601,7 @@ catch {
   Write-Error "Failed to install Terminal Icons module. Error: $_" -ForegroundColor Red
 }
 
-# zoxide Install
+# Zoxide Install
 try {
   winget install -e --id ajeetdsouza.zoxide
   Write-Host "zoxide installed successfully."
@@ -648,19 +646,51 @@ function ShutDownComputer {
 $computers = Get-NetworkComputers
 if ($computers.Count -eq 0) {
   Write-Output "No active computers found."
-} else {
-  Write-Output "Active computers found:"
-  $computers | ForEach-Object { Write-Output $_ }
+  }else {
+    Write-Output "Active computers found:"
+    $computers | ForEach-Object { Write-Output $_ }
   
-  # Example: shutting down the first computer in the list
-  if ($computers.Count -gt 0) {
-    $targetComputer = $computers[0]
-    Write-Output "Shutting down $targetComputer..."
-    ShutDownComputer -ComputerName $targetComputer
+    # Example: shutting down the first computer in the list
+    if ($computers.Count -gt 0) {
+      $targetComputer = $computers[0]
+      Write-Output "Shutting down $targetComputer..."
+      ShutDownComputer -ComputerName $targetComputer
+    }
   }
 }
 
+function CheatSheet {
+@"
+PowerShell Cheatsheet
+=====================
+
+Basic Commands:
+- Get-Command: Lists all cmdlets, functions, workflows, aliases installed.
+- Get-Process: Retrieves a list of running processes.
+- Start-Process: Starts a process.
+- Stop-Process: Stops a process.
+- Get-Service: Lists all services.
+- Start-Service: Starts a service.
+- Stop-Service: Stops a service.
+- Restart-Service: Restarts a service.
+
+File and Directory Management:
+- Get-ChildItem: Lists items in a directory (alias: ls, dir).
+- Set-Location: Changes the current directory (alias: cd).
+- Copy-Item: Copies an item from one location to another.
+- Move-Item: Moves an item from one location to another.
+- Remove-Item: Deletes an item.
+- New-Item: Creates a new item (file, directory, etc.).
+- Get-Content: Reads content of a file.
+- Set-Content: Writes or replaces content in a file.
+- Add-Content: Appends content to a file.
+
+System Information:
+- Get-Location: Displays the current directory.
+"@
 }
+
+
 #* Help Function
 function ShowHelp {
 @"
