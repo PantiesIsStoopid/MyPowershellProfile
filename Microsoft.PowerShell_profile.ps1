@@ -3,8 +3,7 @@ if ([bool]([System.Security.Principal.WindowsIdentity]::GetCurrent()).IsSystem) 
   [System.Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', 'true', [System.EnvironmentVariableTarget]::Machine)
 }
 
-
-# Import Modules and External Profiles
+#* Import Modules and External Profiles
 #* Ensure Terminal-Icons module is installed before importing
 if (-not (Get-Module -ListAvailable -Name Terminal-Icons)) {
   Install-Module -Name Terminal-Icons -Scope CurrentUser -Force -SkipPublisherCheck
@@ -15,7 +14,7 @@ if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
 }
 
-# Clear the console
+#* Clear the console
 Clear-Host
 
 #* Function to identify the terminal
@@ -43,7 +42,7 @@ function TerminalType {
   }
 }
 
-# Get terminal type and print it
+#* Get terminal type and print it
 $terminalType = TerminalType
 Write-Host "$terminalType" -ForegroundColor Yellow
 
@@ -441,6 +440,7 @@ for ($i = 0; $i -lt 10; $i++) {
 function CalcPi {
   # Display result
   $Pi = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938446095505822317253594081284811174502841027019385211055596446229489549303819644288109756659334461284756482337867831652712019091456485669234603486104543266482133936072602491412737245870066063155881748815209209628292540917153643678925903600113305305488204665223576580719180188"
+  Write-Host "Calculating complete result in clipboard." -ForegroundColor Green
   Set-Clipboard -Value $Pi
 
 }
@@ -611,55 +611,76 @@ try {
 catch {
   Write-Error "Failed to install zoxide. Error: $_" -ForegroundColor Red
 }
+
+try {
+  choco install python --pre 
+  Write-Host "Python installed successfully."
+}
+catch {
+  Write-Error "Failed to install Python." -ForegroundColor Red
+}
 }
 
 function RShutdown {
   # Function to check if a computer is reachable
-function Test-ComputerReachability {
-  param (
-    [string]$ComputerName
-  )
-  return Test-Connection -ComputerName $ComputerName -Count 1 -Quiet
-}
-
-# Scan the network for active computers
-function Get-NetworkComputers {
-  $subnet = "192.168.0.0/24"  # Change this to your subnet
-  $activeComputers = @()
-  
-  for ($i = 1; $i -le 254; $i++) {
-    $ip = "$subnet.$i"
-    if (Test-ComputerReachability -ComputerName $ip) {
-      $activeComputers += $ip
-    }
+  function Test-ComputerReachability {
+      param (
+          [string]$ComputerName
+      )
+      return Test-Connection -ComputerName $ComputerName -Count 1 -Quiet
   }
-  return $activeComputers
-}
 
-# Function to shut down a computer without warning
-function ShutDownComputer {
-  param (
-    [string]$ComputerName
-  )
-  Start-Process -FilePath "shutdown.exe" -ArgumentList "/s /f /t 0 /m \\$ComputerName" -NoNewWindow
-}
+  # Function to get the subnet of the local machine
+  function Get-LocalSubnet {
+      $ipInfo = Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.PrefixOrigin -eq "Dhcp" -or $_.PrefixOrigin -eq "Manual" }
+      if ($ipInfo) {
+          $ipAddress = $ipInfo.IPAddress
+          $subnet = $ipAddress.Substring(0, $ipAddress.LastIndexOf("."))
+          return $subnet
+      } else {
+          throw "Unable to determine local subnet."
+      }
+  }
 
-# Scan the network
-$computers = Get-NetworkComputers
-if ($computers.Count -eq 0) {
-  Write-Output "No active computers found."
-  }else {
-    Write-Output "Active computers found:"
-    $computers | ForEach-Object { Write-Output $_ }
-  
-    # Example: shutting down the first computer in the list
-    if ($computers.Count -gt 0) {
-      $targetComputer = $computers[0]
-      Write-Output "Shutting down $targetComputer..."
-      ShutDownComputer -ComputerName $targetComputer
-    }
+  # Scan the network for active computers
+  function Get-NetworkComputers {
+      $subnet = Get-LocalSubnet
+      $activeComputers = @()
+
+      for ($i = 1; $i -le 254; $i++) {
+          $ip = "$subnet.$i"
+          if (Test-ComputerReachability -ComputerName $ip) {
+              $activeComputers += $ip
+          }
+      }
+      return $activeComputers
+  }
+
+  # Function to shut down a computer without warning
+  function ShutDownComputer {
+      param (
+          [string]$ComputerName
+      )
+      Start-Process -FilePath "shutdown.exe" -ArgumentList "/s /f /t 0 /m \\$ComputerName" -NoNewWindow
+  }
+
+  # Scan the network
+  $computers = Get-NetworkComputers
+  if ($computers.Count -eq 0) {
+      Write-Output "No active computers found."
+  } else {
+      Write-Output "Active computers found:"
+      $computers | ForEach-Object { Write-Output $_ }
+
+      # Example: shutting down the first computer in the list
+      if ($computers.Count -gt 0) {
+          $targetComputer = $computers[0]
+          Write-Output "Shutting down $targetComputer..."
+          ShutDownComputer -ComputerName $targetComputer
+      }
   }
 }
+
 
 function CheatSheet {
 @"
