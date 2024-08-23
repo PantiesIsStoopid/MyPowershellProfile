@@ -13,4 +13,4 @@ This PowerShell script is designed to automate various system management tasks. 
 - 1. Open a Powershell terminal and type in the following command to open your profile in a text editor.
 
    '''bash
-  $PROFILE
+     $PROFILE
