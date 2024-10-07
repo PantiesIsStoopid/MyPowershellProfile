@@ -10,6 +10,4 @@ This PowerShell script is designed to automate various system management tasks. 
 
 ## Usage
 
-Invoke-RestMethod -Uri "[https://github.com/PantiesIsStoopid/MyPowershellProfile/raw/main/setup.ps1](https://raw.githubusercontent.com/PantiesIsStoopid/MyPowershellProfile/refs/heads/main/setup.ps1)" -OutFile "setup.ps1"
-
-.\setup.ps1
+irm "https://github.com/PantiesIsStoopif/MyPowershellProfile/raw/main/setup.ps1" | iex
