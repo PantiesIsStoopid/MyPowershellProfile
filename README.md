@@ -10,4 +10,4 @@ This PowerShell script is designed to automate various system management tasks. 
 
 ## Usage
 
-irm "https://github.com/PantiesIsStoopif/MyPowershellProfile/raw/main/setup.ps1" | iex
+irm "https://github.com/PantiesIsStoopid/MyPowershellProfile/raw/main/setup.ps1" | iex
